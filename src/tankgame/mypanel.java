@@ -37,9 +37,22 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
                 for (int j = 0; j < othertank.zidans.size(); j++) {
                     yesattackmytank(othertank.zidans.get(j));
                 }
+                for (int j = i; j < tanks.size(); j++) {
+                    othertank othertank2 = (othertank) tanks.get(j);
+                    if (Math.abs(othertank2.x - othertank.x) < 30 && Math.abs(othertank2.y - othertank.y) < 30) {
+                        othertank.x -= 13;
+                        othertank.y -= 13;
+                        othertank2.x += 13;
+                        othertank2.y += 13;
+                    }
+                }
             }
 
-            over();
+            try {
+                over();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             if (hero.x > 900) hero.x = 900;
             if (hero.x < 70) hero.x = 70;
             if (hero.y > 650) hero.y = 650;
@@ -78,11 +91,11 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
                 hero.x += hero.speed;
                 hero.dirct = KeyEvent.VK_RIGHT;
             }
-            case 'j', 'J' -> {
+            case 'j', 'J', ' ' -> {
                 hero.shot();
             }
         }
-        System.out.println((char) choice);
+//        System.out.println((char) choice);
         repaint();
     }
 
@@ -150,8 +163,6 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
             if (nowtank.cunhuo) drawtank(nowtank.x, nowtank.y, nowtank.dirct, nowtank.type, g);
             else if (nowtank.zidans.size() == 0) {
                 tanks.remove(nowtank);
-            }else{
-                tanks.remove(nowtank);
             }
             for (int i = 0; i < nowtank.zidans.size(); i++) {
                 if (nowtank.zidans.get(i).cunhuo) {
@@ -161,7 +172,7 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
                     nowtank.zidans.remove(nowtank.zidans.get(i));
                 }
             }
-            if (nowtank.zidans.size() == 0) {
+            if (nowtank.zidans.size() == 0&&nowtank.cunhuo) {
                 int temp = nowtank.dirct;
                 zidan zd = null;
                 switch (temp) {
@@ -297,15 +308,61 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
         }
     }
 
-    public void over(){
-        if(!hero.cunhuo){
+    public void over() throws IOException {
+        if (!hero.cunhuo) {
             System.out.println("您寄了");
-            chucun.record(othertank);
+            try {
+                chucun.record(nums - tanks.size());
+
+                chucun.out.close();
+                System.out.println("此次得分" + (nums - tanks.size()));
+                System.out.print("目前最高分");
+                chucun.duqu();
+                JOptionPane.showMessageDialog(null, "本次得分:" + (nums - tanks.size()) + "\n您寄了！\n最高得分:" + chucun.duqu());
+                Thread.sleep(1000);
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            Chucun.times++;
             System.exit(0);
+//            if (Chucun.times != 0) {
+//                int isRestart = JOptionPane.showConfirmDialog(null, "是否重新开始游戏？", "提示", JOptionPane.YES_NO_OPTION);
+//                if (isRestart == JOptionPane.YES_OPTION) {
+//                    new Gogame("坦克大战");
+//                } else {
+//                    chucun.in.close();
+//                    System.exit(0);
+//                }
+//            }
         }
-        if(tanks.size()==0){
+        if (tanks.size() == 0) {
+            JOptionPane.showMessageDialog(null, "此次得分" + (nums - tanks.size()) + "\n您胜利了！\n最高得分：" + chucun.duqu());
             System.out.println("您win麻了");
+            try {
+                chucun.record(nums);
+
+                chucun.out.close();
+                System.out.print("目前最高分");
+                chucun.duqu();
+                Thread.sleep(1000);
+                chucun.in.close();
+                Chucun.times++;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             System.exit(0);
+
+//            if (Chucun.times != 0) {
+//                int isRestart = JOptionPane.showConfirmDialog(null, "是否重新开始游戏？", "提示", JOptionPane.YES_NO_OPTION);
+//                if (isRestart == JOptionPane.YES_OPTION) {
+//                    new Gogame("坦克大战");
+//                } else {
+//                    chucun.in.close();
+//                    System.exit(0);
+//                }
+//            }
+
         }
     }
 }

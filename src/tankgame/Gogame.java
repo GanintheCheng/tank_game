@@ -19,9 +19,11 @@ public class Gogame extends JFrame {
     public Gogame(String name) throws HeadlessException, IOException {
         super(name);
         init();
+
     }
 
     public static void main(String[] args) throws IOException {
         new Gogame("坦克大战");
+
     }
 }

@@ -31,7 +31,7 @@ public class zidan implements Runnable{
             }
             if(x<=0||y<=0||x>=1000||y>=750){
                 cunhuo=false;
-                System.out.println("子弹寄");
+//                System.out.println("子弹寄");
                 break;
             }
         }
