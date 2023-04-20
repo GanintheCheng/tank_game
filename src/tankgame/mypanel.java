@@ -37,6 +37,12 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
                 for (int j = 0; j < othertank.zidans.size(); j++) {
                     yesattackmytank(othertank.zidans.get(j));
                 }
+                if (Math.abs(hero.x - othertank.x) < 30 && Math.abs(hero.y - othertank.y) < 30) {
+                    othertank.x -= 13;
+                    othertank.y -= 13;
+                    hero.x += 13;
+                    hero.y += 13;
+                }
                 for (int j = i; j < tanks.size(); j++) {
                     othertank othertank2 = (othertank) tanks.get(j);
                     if (Math.abs(othertank2.x - othertank.x) < 30 && Math.abs(othertank2.y - othertank.y) < 30) {
@@ -108,7 +114,7 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
 
         chucun.duqu();
         image = Toolkit.getDefaultToolkit().getImage("C:\\Users\\~Ganinthe.Cheng\\IdeaProjects\\tank_game\\out\\production\\tank_game\\img.gif");
-        hero = new mytank(100, 100, 38, 0);
+        hero = new mytank(100, 300, 38, 0);
         tanks = new Vector<>();
         for (int i = 0; i < nums; i++) {
             int temp = 0;
@@ -324,8 +330,8 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            Chucun.times++;
             System.exit(0);
+
 //            if (Chucun.times != 0) {
 //                int isRestart = JOptionPane.showConfirmDialog(null, "是否重新开始游戏？", "提示", JOptionPane.YES_NO_OPTION);
 //                if (isRestart == JOptionPane.YES_OPTION) {
@@ -336,7 +342,7 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
 //                }
 //            }
         }
-        if (tanks.size() == 0) {
+        if (tanks.size() == 0||!yescunhuo()) {
             JOptionPane.showMessageDialog(null, "此次得分" + (nums - tanks.size()) + "\n您胜利了！\n最高得分：" + chucun.duqu());
             System.out.println("您win麻了");
             try {
@@ -347,7 +353,6 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
                 chucun.duqu();
                 Thread.sleep(1000);
                 chucun.in.close();
-                Chucun.times++;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -364,5 +369,13 @@ public class mypanel extends JPanel implements KeyListener, Runnable {
 //            }
 
         }
+    }
+    public boolean yescunhuo(){
+        for (int i = 0; i < tanks.size(); i++) {
+            if(((othertank)tanks.get(i)).cunhuo){
+                return true;
+            }
+        }
+        return false;
     }
 }
